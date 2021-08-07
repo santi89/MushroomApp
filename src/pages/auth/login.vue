@@ -96,8 +96,8 @@ export default {
     return {
       value: "",
       user: {
-        username: "santi",
-        password: "s96616118",
+        username: "",
+        password: "",
       },
     };
   },
