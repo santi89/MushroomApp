@@ -1,5 +1,5 @@
 <template>
-  <f7-page>
+  <f7-page class="font">
     <f7-navbar :title="convertNavbar(head_name)" back-link="Back"></f7-navbar>
     <!-- <f7-toolbar tabbar top >
       <f7-link tab-link="#humidity" tab-link-active>ຄວາມຊຸ່ມ</f7-link>
@@ -93,7 +93,7 @@
                   <f7-list-item
                     @click="
                       f7router.navigate(
-                        `/settingHumidity/${item.action_id}/${item.time}/${item.stt_work}/`
+                        `/settingHumidity/${item.action_id}/${item.time}/${item.stt_work}/${item.stt_use}/`
                       )
                     "
                     :title="'ເວລາ :' + ConvertMinutes(item.time)"
@@ -110,7 +110,8 @@
                   switchH_Setting(
                     item.action_id,
                     item.time,
-                    $event.target.checked
+                    $event.target.checked,
+                    item.stt_work
                   )
                 "
               ></f7-toggle>
@@ -257,7 +258,7 @@
                   <f7-list-item
                     @click="
                       f7router.navigate(
-                        `/settingTemperature/${item.action_id}/${sub_id}/${item.time}/${item.stt_work}/${item.pin}/`
+                        `/settingTemperature/${item.action_id}/${sub_id}/${item.time}/${item.stt_work}/${item.pin}/${item.stt_use}/`
                       )
                     "
                     :title="'ເວລາ: ' + ConvertMinutes(item.time)"
@@ -315,7 +316,7 @@
             ></f7-link>
           </f7-nav-left>
           <div class="col nav-title">ຕັ້ງຄ່າອຸນຫະພູມຕາມເວລາ</div>
-          <!-- @click="SaveSettingTemperature" -->
+
           <f7-nav-right>
             <f7-button @click="saveSettingTemperature()" popup-close
               >ບັນທຶກ</f7-button
@@ -329,9 +330,9 @@
               outline
               label="ການເຮັດວຽກ"
               type="select"
-              @input="select_fan_type = $event.target.value"
-              placeholder="ດູດອາກາດອອກ"
+              v-model="select_fan_type"
             >
+              <!-- @input="select_fan_type = $event.target.value" -->
               <option value="D4">ດູດອາກາດອອກ</option>
               <option value="D5">ດູດອາກາດເຂົ້າ</option>
             </f7-list-input>
@@ -398,6 +399,7 @@ export default {
       settingT: [],
       settingH: [],
       chek_autoH: false,
+
       auto_stt: "",
       action_id: "",
       first: null,
@@ -514,6 +516,8 @@ export default {
           this.auto_stt = 1;
           this.off_input = true;
         }
+        // console.log("ff" + this.auto_stt);
+
         http
           .post("/api/control/switch_Auto", {
             time: this.auto_H,
@@ -521,7 +525,7 @@ export default {
             action_id: this.action_id,
           })
           .then((Response) => {
-            if (Response.status === 201) {
+            if (Response.status === 200) {
               //send to board
               http
                 .post("/api/post_autoconfig", {
@@ -531,8 +535,9 @@ export default {
                   stUse: this.auto_stt,
                 })
                 .then((Response) => {
-                  if (Response.status === 201) {
+                  if (Response.status === 200) {
                     //send to board
+                    // console.log("ff" + this.auto_stt);
                   }
                 })
                 .catch(() => {});
@@ -542,7 +547,7 @@ export default {
       }
       this.first = 1;
     },
-    switchH_Setting(action_id, value, check_h_s) {
+    switchH_Setting(action_id, value, check_h_s, stt_work) {
       var stt_use = "";
       if (check_h_s == true) {
         stt_use = 1;
@@ -559,21 +564,20 @@ export default {
         .then((Response) => {
           if (Response.status === 201) {
             //send to board
-            // this.fetch_H_setting();
+            this.fetch_H_setting();
+            // console.log("all:" + value + "f:" + stt_use);
             http
               .post("/api/post_SettingConfig", {
                 id: action_id,
                 pin: "D0",
-                val: this.converttime_Int(value),
-                stWork: "",
-                stUse: this.select_stt_humidity,
+                val: value, //no convert coz it is int
+                stWork: this.convertStt_work(stt_work),
+                stUse: stt_use,
               })
               .then((Response) => {
                 if (Response.status === 200) {
                   //send to board
-                  console.log(
-                    "all:" + action_id + "f:" + this.select_stt_humidity
-                  );
+                  console.log("aldddl:" + action_id + "f:" + stt_use);
                 }
               })
               .catch(() => {});
@@ -603,8 +607,8 @@ export default {
               .post("/api/post_SettingConfig", {
                 id: action_id,
                 pin: pin,
-                val: this.converttime_Int(value),
-                stWork: work,
+                val: value, //no convert coz it is int
+                stWork: this.convertStt_work(work),
                 stUse: stt_use,
               })
               .then((Response) => {
@@ -646,6 +650,7 @@ export default {
       const arr = this.start_insertT.split(":");
       const seconds = parseInt(arr[0]) * 60 + parseInt(arr[1]);
 
+      console.log("formf"+this.select_fan_type)
       var data = {
         pin: this.select_fan_type,
         sub_id: this.sub_id,
@@ -683,6 +688,13 @@ export default {
         return true;
       } else if (st_use == 0) {
         return false;
+      }
+    },
+    convertStt_work(st_work) {
+      if (st_work == "ON") {
+        return 1;
+      } else if (st_work == "OFF") {
+        return 0;
       }
     },
     convertNavbar(title) {
@@ -723,7 +735,7 @@ export default {
         .then((Response) => {
           if (Response.status === 200) {
             this.settingT = Response.data;
-            // console.log("d:" + JSON.stringify(this.setting));
+            // console.log("d:" + JSON.stringify(this.settingT));
           }
         })
         .catch(() => {});

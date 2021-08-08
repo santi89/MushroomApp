@@ -1,5 +1,5 @@
 <template>
-  <f7-app v-bind="f7params">
+  <f7-app v-bind="f7params" class="font">
     <!-- Your main view, should have "view-main" class -->
     <!-- <f7-view main class="safe-areas" url="/"></f7-view> -->
 
@@ -108,4 +108,7 @@ export default {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
   position: flixed;
 }
+.font {
+  font-family:'noto sans lao';
+  }
 </style>

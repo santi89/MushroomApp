@@ -15,7 +15,8 @@ import NotFoundPage from "../pages/404.vue";
 import Report from "../pages/device/report.vue";
 import SettingHumidity from "../pages/device/settingHumidity.vue";
 import Devicedata from "../pages/device/devicedata.vue";
- import Test from "../pages/chart.vue";
+import Editprofile from "../pages/auth/editprofile.vue";
+
 
 var routes = [
   {
@@ -39,16 +40,16 @@ var routes = [
     component: AboutPage,
   },
   {
-    path: "/test/",
-    component: Test,
+    path: "/editprofile/",
+    component: Editprofile,
   },
   {
-    path: "/settingHumidity/:action_id/:time/:stt_work/",
+    path: "/settingHumidity/:action_id/:time/:stt_work/:stt_use",
     component: SettingHumidity,
     props: true,
   },
   {
-    path: "/settingTemperature/:action_id/:sub_id/:time/:stt_work/:gpio_name/",
+    path: "/settingTemperature/:action_id/:sub_id/:time/:stt_work/:pin/:stt_use",
     component: SettingTemperature,
     props: true,
   },

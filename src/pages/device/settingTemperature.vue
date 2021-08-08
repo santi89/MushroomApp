@@ -1,5 +1,5 @@
 <template>
-  <f7-page>
+  <f7-page class="font">
     <f7-navbar title="ຕັ້ງຄ່າອຸນຫະພູມຕາມເວລາ" back-link="back">
       <f7-nav-right>
         <f7-link @click="Update_temperature_setting">ບັນທຶກ</f7-link>
@@ -69,7 +69,10 @@ export default {
     stt_work: {
       type: String,
     },
-    gpio_name: {
+    pin: {
+      type: String,
+    },
+    stt_use: {
       type: String,
     },
   },
@@ -77,7 +80,7 @@ export default {
     return {
       time_t: this.ConvertMinutes(this.time),
       select_stt_Temperature: this.changeStatus(this.stt_work),
-      select_fan_type:this.gpio_name,
+      select_fan_type: this.pin,
     };
   },
   methods: {
@@ -85,23 +88,43 @@ export default {
       const arr = this.time_t.split(":");
       const seconds = parseInt(arr[0]) * 60 + parseInt(arr[1]);
 
+     
       var data = {
+        pin: this.select_fan_type,
         sub_id: this.sub_id,
         time: seconds, //format ເປັນນາທີ
         stt_work: this.select_stt_Temperature,
+        stt_use:this.stt_use,
         action_id: this.action_id,
       };
-              // console.log("this:  "+JSON.stringify(data));
+      // console.log("this:  " + JSON.stringify(data));
       http
         .post("/api/control/update_T_setting", data)
         .then((Response) => {
           if (Response.status === 201) {
+            http
+              .post("/api/post_SettingConfig", {
+                id: this.action_id,
+                pin: this.select_fan_type,
+                val: seconds, //no convert coz it is int
+                stWork: this.select_stt_Temperature,
+                stUse: this.stt_use,
+              })
+              .then((Response) => {
+                if (Response.status === 200) {
+                  //send to board
+                  console.log("aldddl:" + this.action_id + "f:" + this.stt_use);
+                  this.f7router.back({ force: true });
+                }
+              })
+              .catch(() => {});
+
             this.f7router.back({ force: true });
           }
         })
         .catch(() => {});
     },
-     deleteT_setting() {
+    deleteT_setting() {
       http
         .delete("/api/control/delete_HT_setting", {
           params: { action_id: this.action_id },

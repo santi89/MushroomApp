@@ -1,5 +1,5 @@
 <template>
-  <f7-page name="signup">
+  <f7-page name="signup" class="font">
     <f7-navbar title="ລົງຊື່ເຂົ້າໃຊ້" back-link="back"></f7-navbar>
     <f7-block>
       <f7-list no-hairlines-md>
@@ -89,7 +89,8 @@
   </f7-page>
 </template>
 <script>
-import { http } from "../../http";
+import { http } from "../../http"; 
+import {f7} from "framework7-vue";
 export default {
   props: {
     f7router: Object,

@@ -1,10 +1,10 @@
 <template>
-  <f7-page name="home" color-theme-pink>
+  <f7-page name="home" class="font">
     <!-- Top Navbar -->
     <f7-navbar :sliding="false">
       <f7-nav-title class="">Mushroom App</f7-nav-title>
       <f7-nav-right>
- <f7-link href="/notificate/">
+        <f7-link href="/notificate/">
           <f7-icon
             ios="f7:bell_circle"
             aurora="f7:bell_circle"
@@ -14,6 +14,7 @@
           </f7-icon>
         </f7-link>
         <f7-link
+         
           panel-open="right"
           icon-ios="f7:menu"
           icon-aurora="f7:menu"
@@ -42,7 +43,7 @@
             ></f7-list-item>
 
             <f7-list-item
-              @click="f7router.navigate(`/test/`)"
+              @click="f7router.navigate(`/report/`)"
               view=".view-main"
               panel-close
               title="ລາຍງານ"

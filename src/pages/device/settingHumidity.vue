@@ -1,6 +1,10 @@
 <template>
-  <f7-page>
-    <f7-navbar title="ຕັ້ງຄ່າຄວາມຊຸ່ມຕາມເວລາ" back-link="back">
+  <f7-page class="font">
+    <f7-navbar
+      title="ຕັ້ງຄ່າຄວາມຊຸ່ມຕາມເວລາ"
+      back-link=""
+      @click="f7router.back({ force: true })"
+    >
       <f7-nav-right>
         <f7-link @click="SaveSettingHumidity()">ບັນທຶກ</f7-link>
       </f7-nav-right>
@@ -61,6 +65,9 @@ export default {
     stt_work: {
       type: String,
     },
+    stt_use: {
+      type: String,
+    },
   },
   data() {
     return {
@@ -76,22 +83,34 @@ export default {
         .post("/api/control/update_H_setting", {
           time: seconds, //format ເປັນນາທີ
           stt_work: this.status_w,
+          stt_use: this.stt_use,
           action_id: this.action_id,
         })
         .then((Response) => {
           if (Response.status === 201) {
             // console.log("form H");
-            this.f7router.back({ force: true });
-
-            // console.log(
-            //   "this:id" + this.status_w + "vv" + this.action_id + "vv" + seconds
-            // );
+            http
+              .post("/api/post_SettingConfig", {
+                id: this.action_id,
+                pin: "D0",
+                val: seconds, //no convert coz it is int
+                stWork: this.status_w,
+                stUse: this.stt_use,
+              })
+              .then((Response) => {
+                if (Response.status === 200) {
+                  //send to board
+                  console.log("aldddl:" + this.action_id + "f:" + this.stt_use);
+                  this.f7router.back({ force: true });
+                }
+              })
+              .catch(() => {});
           }
         })
         .catch(() => {});
     },
     deleteH_setting() {
-       const arr = this.time_h.split(":");
+      const arr = this.time_h.split(":");
       const seconds = parseInt(arr[0]) * 60 + parseInt(arr[1]);
 
       http
@@ -103,11 +122,11 @@ export default {
           if (Response.status === 201) {
             http
               .delete("/api/delete_Setting", {
-                id:this.action_id,
-                pin:"D0",
-                val:seconds,
-                stWork:this.status_w,
-                stUse:0,
+                id: this.action_id,
+                pin: "D0",
+                val: seconds,
+                stWork: this.status_w,
+                stUse: 0,
               })
               .then((Response) => {
                 // console.log("vv" + this.action_id);
@@ -116,7 +135,7 @@ export default {
                 }
               })
               .catch(() => {});
-           // this.f7router.back({ force: true });
+            // this.f7router.back({ force: true });
           }
         })
         .catch(() => {});
@@ -140,7 +159,9 @@ export default {
       }
     },
   },
-  mounted() {},
+  mounted() {
+    // console.log("document:" + this.stt_work + "f" + this.stt_use);
+  },
   created() {},
 };
 </script>

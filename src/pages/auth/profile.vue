@@ -1,8 +1,8 @@
 <template>
-  <f7-page name="profile" theme="dark">
+  <f7-page name="profile" class="font">
     <f7-navbar title="ໂປຣໄຟລ໌" back-link="Back">
       <f7-nav-right>
-        <f7-link popup-open=".demo-edit"> ແກ້ໄຂ </f7-link>
+        <f7-link @click="f7router.navigate(`/editprofile/`)"> ແກ້ໄຂ </f7-link>
       </f7-nav-right>
     </f7-navbar>
 
@@ -33,87 +33,7 @@
       <f7-list-item title="ເບີໂທ:">{{ phone }}</f7-list-item>
     </f7-list>
     <!-- pop up edit -->
-    <f7-popup
-      class="demo-edit"
-      :opened="popupOpened"
-      @popup:closed="popupOpened = false"
-    >
-      <f7-page>
-        <f7-navbar>
-          <f7-nav-left>
-            <f7-link
-              popup-close
-              icon-ios="f7:arrow_left"
-              icon-aurora="f7:arrow_left"
-              icon-md="material:arrow_back"
-              icon-f7="arrow_back"
-            ></f7-link>
-          </f7-nav-left>
-<f7-nav-title>ແກ້ໄຂໂປຣໄຟລ໌</f7-nav-title>
-          <f7-nav-right>
-            <f7-link>ບັນທຶກ</f7-link>
-          </f7-nav-right>
-        </f7-navbar>
-        <f7-block>
-          <f7-list no-hairlines-md inline-labels>
-            <f7-list-input
-              required
-              floating-label
-              :value="firstname"
-              @input="firstname = $event.target.value"
-              label="ຊື່"
-              type="text"
-            
-              clear-button
-            >
-            </f7-list-input>
-            <f7-list-input
-              floating-label
-              :value="lastname"
-              @input="lastname = $event.target.value"
-              label="ນາມສະກຸນ"
-              type="text"
-              
-              clear-button
-            >
-            </f7-list-input>
-            <f7-list-input
-              floating-label
-              :value="username"
-              @input="username = $event.target.value"
-              label="ຊື່ຜູ້ໃຊ້"
-              type="text"
-              required
-              clear-button
-            >
-            </f7-list-input>
-            <f7-list-input
-              floating-label
-              :value="email"
-              @input="email = $event.target.value"
-              label="ອີເມວ"
-              type="email"
-              required
-              clear-button
-            >
-            </f7-list-input>
-            <f7-list-input
-              floating-label
-              :value="phone"
-              @input="phone = $event.target.value"
-              label="ເບີໂທ"
-              type="text"
-              required
-              clear-button
-            >
-            </f7-list-input>
-          </f7-list>
-        </f7-block>
-        <!-- <f7-block>
-          <f7-button @click="update()" outline strong>Update</f7-button>
-        </f7-block> -->
-      </f7-page>
-    </f7-popup>
+    
   </f7-page>
 </template>
 
@@ -123,12 +43,12 @@ import { f7 } from "framework7-vue";
 import get_users from "../../js/script/get/get_users";
 
 export default {
+  props: {
+    f7router: Object,
+  },
   data() {
     return {
-      // image_url:
-      //    "https://maxcdn.icons8.com/Share/icon/Users//user_male_circle_filled1600.png",
-
-      popupOpened: false,
+    
       dep: [],
       firstname: "",
       lastname: "",
@@ -143,7 +63,7 @@ export default {
     update: function () {
       const user = JSON.parse(localStorage.getItem("info-user"));
       const data = {
-        user_id: this.user_id,
+        user_id: user.user_id,
         username: this.username,
         email: this.email,
         firstname: this.firstname,
@@ -166,14 +86,14 @@ export default {
           .catch(() => {});
     },
     fecth_dep() {
-      http
-        .get("/api/dep/sig")
-        .then((Response) => {
-          this.dep = Response;
-        })
-        .catch((err) => {
-          return err;
-        });
+      const user = JSON.parse(localStorage.getItem("info-user"));
+      this.username = user.username;
+      this.email = user.email;
+      this.firstname = user.firstname;
+      this.lastname = user.lastname;
+      this.department = user.dep_name;
+      this.status = user.status;
+      this.phone = user.phone;
     },
     // ss() {
     //   console.log("aa" + this.firstname);
@@ -186,26 +106,28 @@ export default {
   },
   computed: {},
   created() {
-    this.fecth_dep();
-    const user = JSON.parse(localStorage.getItem("info-user"));
-    this.username = user.username;
-    this.email = user.email;
-    this.firstname = user.firstname;
-    this.lastname = user.lastname;
-    this.department = user.dep_name;
-    this.status = user.status;
-    this.phone = user.phone;
-  },
-  mounted() {
+    // this.fecth_dep();
     // const user = JSON.parse(localStorage.getItem("info-user"));
     // this.username = user.username;
     // this.email = user.email;
     // this.firstname = user.firstname;
     // this.lastname = user.lastname;
-    // // this.department = user.dep_name;
+    // this.department = user.dep_name;
     // this.status = user.status;
     // this.phone = user.phone;
   },
+  mounted() {
+    this.fecth_dep();
+    // const user = JSON.parse(localStorage.getItem("info-user"));
+    // this.username = user.username;
+    // this.email = user.email;
+    // this.firstname = user.firstname;
+    // this.lastname = user.lastname;
+    // this.department = user.dep_name;
+    // this.status = user.status;
+    // this.phone = user.phone;
+  },
+  watch: {},
 };
 </script>
 

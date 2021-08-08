@@ -1,6 +1,6 @@
 <template>
-  <f7-page>
-    <f7-navbar back-link="back" color-teal>
+  <f7-page class="font">
+    <f7-navbar back-link="back" >
       <f7-nav-title class="">ອຸປະກອນ</f7-nav-title>
       <f7-nav-right> </f7-nav-right>
     </f7-navbar>

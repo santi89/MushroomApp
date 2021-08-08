@@ -1,5 +1,5 @@
 <template>
-  <f7-page>
+  <f7-page class="font">
     <f7-navbar back-link="back" title="ລາຍງານຄວາມຊຸ່ມ ແລະ ອຸນຫະພູມ">
     </f7-navbar>
 

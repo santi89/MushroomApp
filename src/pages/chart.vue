@@ -1,4 +1,5 @@
 <template>
+  <f7-page class="font">
   <div class="small">
     <apexcharts :options="this.chartOptions" :series="this.series" />
     <!-- <button @click="fillData()">Randomize</button> -->
@@ -20,6 +21,7 @@
       ]"
     />
   </div>
+    <f7-page>
 </template>
 
 <script>

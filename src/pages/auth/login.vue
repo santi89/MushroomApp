@@ -1,5 +1,5 @@
 <template>
-  <f7-page no-hairlines-md name="signin">
+  <f7-page class="font" no-hairlines-md name="signin">
     <!-- <div class="langchange">
         <f7-row>
           <f7-col></f7-col>
@@ -16,11 +16,7 @@
       </div> -->
 
     <div class="wrapper">
-      <img
-        class="image--cover"
-        src="../../assets/logo_avatar.png"
-        alt=""
-      />
+      <img class="image--cover" src="../../assets/logo_avatar.png" alt="" />
     </div>
 
     <f7-login-screen-title>ເຂົ້າສູ່ລະບົບ</f7-login-screen-title>
@@ -96,8 +92,8 @@ export default {
     return {
       value: "",
       user: {
-        username: "",
-        password: "",
+        username: "santi",
+        password: "s96616118",
       },
     };
   },
@@ -143,12 +139,16 @@ export default {
           return err;
         });
     },
-   
   },
 };
 </script>
 
 <style scoped>
+.font {
+  font-family: "noto sans lao";
+  font-size: 100pt;
+}
+
 .wrapper {
   text-align: center;
 }

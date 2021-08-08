@@ -1,5 +1,5 @@
 <template>
-  <f7-page>
+  <f7-page class="font">
     <f7-navbar title="ແຈ້ງເຕືອນ" back-link="back"> </f7-navbar>
     <f7-card>
       <f7-list accordion-list>

@@ -1,6 +1,6 @@
 <template>
-  <f7-page no-hairlines-md>
-    <f7-navbar title="Add Project" back-link="back" class="bg-color-teal">
+  <f7-page no-hairlines-md class="font">
+    <f7-navbar title="ເພີ່ມໂຄງການ" back-link="back" class="bg-color-teal">
       <!-- <f7-nav-right fill onclick="">Add</f7-nav-right>      -->
     </f7-navbar>
 
